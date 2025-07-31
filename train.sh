@@ -26,21 +26,20 @@ ulimit -a
 mkdir -p logs
 
 # Set PATH to include your local Julia
-export PATH="$HOME/julia_local/julia-1.11.6/bin:$PATH"
+export PATH="$HOME/julia-1.11.6/bin:$PATH"
 
 # Set Julia threads to match SLURM's CPU allocation
 export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-nvidia-smi
 which julia
 julia -e 'using CUDA; CUDA.versioninfo()'
 
 # Run your Julia script
-julia --project=. examples/DINCAE_tutorial.jl || { echo "Error: Julia script failed to execute."; exit 1; }
+julia --project=./ examples/DINCAE_tutorial.jl || { echo "Error: Julia script failed to execute."; exit 1; }
 
 notify_telegram "SUCCESS"
 
 # Clear the EXIT trap to avoid double notifications
 trap - EXIT
 
-echo "Training completed successfully"                                                                                                                                                               22,0-1        All
+echo "Training completed successfully"
