@@ -36,7 +36,7 @@ which julia
 julia -e 'using CUDA; CUDA.versioninfo()'
 
 # Run your Julia script
-julia --project=./ examples/DINCAE_tutorial.jl || { echo "Error: Julia script failed to execute."; exit 1; }
+julia --project=. examples/DINCAE_tutorial.jl || { echo "Error: Julia script failed to execute."; exit 1; }
 
 notify_telegram "SUCCESS"
 
