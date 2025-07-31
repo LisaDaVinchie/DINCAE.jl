@@ -587,6 +587,7 @@ function reconstruct(Atype,data_all,fnames_rec;
     # loop over epochs
     @time for e = 1:epochs
     #Juno.@profile @time  for e = 1:epochs
+        @info("Starting epoch $e of $epochs")
         lr = learning_rate * 0.5^(e / learning_rate_decay_epoch)
 
         loss_avg = train_epoch!(MO,DINCAE.PrefetchDataIter(train),lr;
@@ -648,6 +649,8 @@ function reconstruct(Atype,data_all,fnames_rec;
         end
 
         shuffle!(train)
+
+        @info("Epoch $e finished, loss: $loss_avg\n\n")
     end
 
     close.(ds)
