@@ -12,8 +12,8 @@ source bot_codes.txt
 bot_id=${bot_id}
 chat_id=${chat_id}
 
-export JULIA_LOAD_LIBCPP=false
-export LD_PRELOAD=/usr/lib64/libstdc++.so.6  # Replace if needed
+# export JULIA_LOAD_LIBCPP=false
+# export LD_PRELOAD=/usr/lib64/libstdc++.so.6  # Replace if needed
 
 set -euo pipefail
 
