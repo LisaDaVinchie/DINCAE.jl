@@ -39,7 +39,6 @@ using DINCAE
 using DINCAE_utils
 using Dates
 using NCDatasets
-using PyPlot
 
 # ## Data download
 #
@@ -224,12 +223,12 @@ end
 
 # Plot the loss function
 
-plot(loss)
-ylim(extrema(loss[2:end]))
-xlabel("epochs")
-ylabel("loss");
-# Save the loss function to a file
-savefig(joinpath(outdir, "loss.png"))
+# plot(loss)
+# ylim(extrema(loss[2:end]))
+# xlabel("epochs")
+# ylabel("loss");
+# # Save the loss function to a file
+# savefig(joinpath(outdir, "loss.png"))
 
 # # Post process results
 #
