@@ -38,6 +38,8 @@ export PATH="$HOME/julia-1.11.6/bin:$PATH" # Ensure Julia is in PATH
 echo "🔧 Using Julia at: $(which julia)"
 julia -e 'using CUDA; CUDA.versioninfo()'
 
+source dincae_venv/bin/activate
+
 # Run Julia script with fallback notification
 if julia --project=. examples/DINCAE_tutorial.jl; then
     notify_telegram "✅ SUCCESS"
@@ -47,3 +49,5 @@ else
     echo "❗ Error: Julia script failed to execute."
     exit 1
 fi
+
+source deactivate
