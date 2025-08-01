@@ -8,6 +8,13 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1            # Request 1 GPU
 
+source bot_codes.txt
+bot_id=${bot_id}
+chat_id=${chat_id}
+
+export JULIA_LOAD_LIBCPP=false
+export LD_PRELOAD=/usr/lib64/libstdc++.so.6  # Replace if needed
+
 set -euo pipefail
 
 notify_telegram() {
@@ -27,8 +34,6 @@ mkdir -p logs
 
 # Set up environment
 export PATH="$HOME/julia-1.11.6/bin:$PATH" # Ensure Julia is in PATH
-export JULIA_NUM_THREADS=$SLURM_CPUS_PER_TASK # Set Julia threads to match SLURM's CPU allocation
-export JULIA_LOAD_LIBCPP=false # Disable libcpp to avoid conflicts
 
 echo "🔧 Using Julia at: $(which julia)"
 julia -e 'using CUDA; CUDA.versioninfo()'
