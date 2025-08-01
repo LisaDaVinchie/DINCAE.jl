@@ -86,6 +86,17 @@ if !isfile(fname_subset)
     download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
 end
 
+if filesize(fname_subset) < 1_000_000
+    error("Downloaded file seems too small — possibly corrupted or incomplete.")
+end
+
+try
+    ds = NCDataset(fname_subset)
+    close(ds)
+catch e
+    error("Failed to open NetCDF file: $e")
+end
+
 # ```julia
 # url = "https://thredds.jpl.nasa.gov/thredds/dodsC/ncml_aggregation/OceanTemperature/modis/terra/11um/4km/aggregate__MODIS_TERRA_L3_SST_THERMAL_DAILY_4KM_DAYTIME_V2019.0.ncml#fillmismatch"
 # ds = NCDataset(url)
@@ -161,7 +172,7 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
-epochs = 1000
+epochs = 10
 batch_size = 32
 enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
 clip_grad = 5.0
@@ -169,7 +180,8 @@ regularization_L2_beta = 0
 ntime_win = 3
 upsampling_method = :nearest
 loss_weights_refine = (0.3,0.7)
-save_epochs = 200:10:epochs
+# save_epochs = 200:10:epochs
+save_epochs = epochs:epochs
 
 
 data = [
@@ -203,12 +215,21 @@ loss = DINCAE.reconstruct(
     ntime_win = ntime_win,
 )
 
+open(joinpath(outdir, "loss.txt"), "w") do io
+    for l in loss
+        println(io, l)
+    end
+end
+
+
 # Plot the loss function
 
 plot(loss)
 ylim(extrema(loss[2:end]))
 xlabel("epochs")
 ylabel("loss");
+# Save the loss function to a file
+savefig(joinpath(outdir, "loss.png"))
 
 # # Post process results
 #
