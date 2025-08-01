@@ -49,5 +49,3 @@ else
     echo "❗ Error: Julia script failed to execute."
     exit 1
 fi
-
-source deactivate
