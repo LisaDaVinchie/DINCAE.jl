@@ -246,11 +246,11 @@ cvrms = DINCAE_utils.cvrms(case,fnameavg)
 # Next we plot all time instances. The figures will be placed in the
 # directory `figdir`
 
-figdir = joinpath(outdir,"Fig")
-DINCAE_utils.plotres(case,fnameavg, clim = nothing, figdir = figdir,
-                     clim_quantile = (0.01,0.99),
-                     which_plot = :cv)
-@info "Figures are in $(figdir)"
+# figdir = joinpath(outdir,"Fig")
+# DINCAE_utils.plotres(case,fnameavg, clim = nothing, figdir = figdir,
+#                      clim_quantile = (0.01,0.99),
+#                      which_plot = :cv)
+# @info "Figures are in $(figdir)"
 
 
 # Example reconstruction for 2001-09-12
