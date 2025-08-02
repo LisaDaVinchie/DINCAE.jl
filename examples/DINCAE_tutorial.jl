@@ -202,6 +202,8 @@ data_all = [data,data_test]
 
 # Start the training and reconstruction of the neural network.
 
+savefile = joinpath(outdir, "dincae_weights.bson")
+
 loss = DINCAE.reconstruct(
     Atype,data_all,fnames_rec;
     epochs = epochs,
@@ -212,6 +214,7 @@ loss = DINCAE.reconstruct(
     upsampling_method = upsampling_method,
     loss_weights_refine = loss_weights_refine,
     ntime_win = ntime_win,
+    savefile = savefile
 )
 
 open(joinpath(outdir, "loss.txt"), "w") do io
