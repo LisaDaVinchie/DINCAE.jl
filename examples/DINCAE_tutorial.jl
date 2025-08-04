@@ -48,11 +48,11 @@ using NCDatasets
 # applications one should use a much longer time-range (like 10, 20 years or more)
 
 # longitude range (east, west)
-lon_range = [-7, -0.8]
+lon_range = [-7, 37]
 # latitude range (south, north)
-lat_range = [33.8, 38.2]
+lat_range = [30, 46]
 # time range (start, end)
-time_range = [DateTime(2000,2,25), DateTime(2020,12,31)]
+time_range = [DateTime(1993,1,1), DateTime(2019,5,13)]
 #time_range = [DateTime(2000,2,25), DateTime(2000,3,31)]
 #time_range = [DateTime(2001,1,1), DateTime(2001,12,31)]
 
@@ -171,16 +171,25 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
-epochs = 10
+epochs = 1000
 batch_size = 32
-enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
+enc_nfilter_internal = [16, 30, 58, 110, 209]
 clip_grad = 5.0
 regularization_L2_beta = 0
 ntime_win = 3
 upsampling_method = :nearest
 loss_weights_refine = (0.3,0.7)
-# save_epochs = 200:10:epochs
-save_epochs = epochs:epochs
+save_epochs = 200:10:epochs
+
+# Sample
+# epochs = 10
+# enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
+# clip_grad = 5.0
+# regularization_L2_beta = 0
+# ntime_win = 3
+# upsampling_method = :nearest
+# loss_weights_refine = (0.3,0.7)
+# save_epochs = epochs:epochs
 
 
 data = [
