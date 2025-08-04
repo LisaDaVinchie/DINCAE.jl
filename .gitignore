@@ -5,7 +5,6 @@ Data/
 logs/
 dincae_venv/
 results/
-data_analysis.ipynb
 transfer.sh
 reconstruct.jl
 Makefile
