@@ -53,7 +53,6 @@ lon_range = [-7, 37]
 lat_range = [30, 46]
 # time range (start, end)
 time_range = [DateTime(1993,1,1), DateTime(2019,5,13)]
-#time_range = [DateTime(2000,2,25), DateTime(2000,3,31)]
 #time_range = [DateTime(2001,1,1), DateTime(2001,12,31)]
 
 
@@ -81,36 +80,35 @@ mkpath(outdir)
 
 #  `Error { code = 500; message = "Java heap space"; }`
 
-if !isfile(fname_subset)
-    download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
-end
+# if !isfile(fname_subset)
+#     download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
+# end
 
-if filesize(fname_subset) < 1_000_000
-    error("Downloaded file seems too small — possibly corrupted or incomplete.")
-end
+# if filesize(fname_subset) < 1_000_000
+#     error("Downloaded file seems too small — possibly corrupted or incomplete.")
+# end
 
-try
-    ds = NCDataset(fname_subset)
-    close(ds)
-catch e
-    error("Failed to open NetCDF file: $e")
-end
+# try
+#     ds = NCDataset(fname_subset)
+#     close(ds)
+# catch e
+#     error("Failed to open NetCDF file: $e")
+# end
 
-# ```julia
-# url = "https://thredds.jpl.nasa.gov/thredds/dodsC/ncml_aggregation/OceanTemperature/modis/terra/11um/4km/aggregate__MODIS_TERRA_L3_SST_THERMAL_DAILY_4KM_DAYTIME_V2019.0.ncml#fillmismatch"
-# ds = NCDataset(url)
-# # find indices withing the longitude, latitude and time range
-# i = findall(lon_range[1] .<= ds["lon"][:] .<= lon_range[end]);
-# j = findall(lat_range[1] .<= ds["lat"][:] .<= lat_range[end]);
-# n = findall(time_range[1] .<= ds["time"][:] .<= time_range[end]);
-# # Write subset to disk
-# write(fname_subset,ds,idimensions = Dict(
-#    "lon" => i,
-#    "lat" => j,
-#    "time" => n))
-# close(ds)
-# @info "NetCDF subset ($(length(n)) slices) written $fname_subset"
-# ```
+
+url = "https://thredds.jpl.nasa.gov/thredds/dodsC/ncml_aggregation/OceanTemperature/modis/terra/11um/4km/aggregate__MODIS_TERRA_L3_SST_THERMAL_DAILY_4KM_DAYTIME_V2019.0.ncml#fillmismatch"
+ds = NCDataset(url)
+# find indices withing the longitude, latitude and time range
+i = findall(lon_range[1] .<= ds["lon"][:] .<= lon_range[end]);
+j = findall(lat_range[1] .<= ds["lat"][:] .<= lat_range[end]);
+n = findall(time_range[1] .<= ds["time"][:] .<= time_range[end]);
+# Write subset to disk
+write(fname_subset,ds,idimensions = Dict(
+   "lon" => i,
+   "lat" => j,
+   "time" => n))
+close(ds)
+@info "NetCDF subset ($(length(n)) slices) written $fname_subset"
 
 # ## Data preparation
 #
@@ -171,7 +169,7 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
-epochs = 1000
+epochs = 10
 batch_size = 32
 enc_nfilter_internal = [16, 30, 58, 110, 209]
 clip_grad = 5.0
