@@ -39,6 +39,7 @@ using DINCAE
 using DINCAE_utils
 using Dates
 using NCDatasets
+using data_processing
 
 # ## Data download
 #
@@ -57,7 +58,7 @@ time_range = [DateTime(1993,1,1), DateTime(2019,5,13)]
 
 
 # local directory
-localdir = expanduser("~/Data/SST-AlboranSea-example")
+localdir = expanduser("./data")
 # create directory
 mkpath(localdir)
 # filename of the subset
@@ -96,23 +97,31 @@ mkpath(outdir)
 # end
 
 
-url = "https://thredds.jpl.nasa.gov/thredds/dodsC/ncml_aggregation/OceanTemperature/modis/terra/11um/4km/aggregate__MODIS_TERRA_L3_SST_THERMAL_DAILY_4KM_DAYTIME_V2019.0.ncml#fillmismatch"
-ds = NCDataset(url)
-# find indices withing the longitude, latitude and time range
-i = findall(lon_range[1] .<= ds["lon"][:] .<= lon_range[end]);
-j = findall(lat_range[1] .<= ds["lat"][:] .<= lat_range[end]);
-n = findall(time_range[1] .<= ds["time"][:] .<= time_range[end]);
-# Write subset to disk
-write(fname_subset,ds,idimensions = Dict(
-   "lon" => i,
-   "lat" => j,
-   "time" => n))
-close(ds)
-@info "NetCDF subset ($(length(n)) slices) written $fname_subset"
+# url = "https://thredds.jpl.nasa.gov/thredds/dodsC/ncml_aggregation/OceanTemperature/modis/terra/11um/4km/aggregate__MODIS_TERRA_L3_SST_THERMAL_DAILY_4KM_DAYTIME_V2019.0.ncml#fillmismatch"
+# ds = NCDataset(url)
 
-# ## Data preparation
-#
-# Load the NetCDF variable `sst` and `qual_sst`
+# HPC-optimized processing
+zip_directory = "./zip/"
+fname_subset = create_subset_from_zips(
+    zip_directory, localdir, lon_range, lat_range, time_range;
+    max_memory_gb=8,  # Use more memory if available
+    use_scratch=true    # Use scratch space for temp files
+)
+# # find indices withing the longitude, latitude and time range
+# i = findall(lon_range[1] .<= ds["lon"][:] .<= lon_range[end]);
+# j = findall(lat_range[1] .<= ds["lat"][:] .<= lat_range[end]);
+# n = findall(time_range[1] .<= ds["time"][:] .<= time_range[end]);
+# # Write subset to disk
+# write(fname_subset,ds,idimensions = Dict(
+#    "lon" => i,
+#    "lat" => j,
+#    "time" => n))
+# close(ds)
+# @info "NetCDF subset ($(length(n)) slices) written $fname_subset"
+
+# # ## Data preparation
+# #
+# # Load the NetCDF variable `sst` and `qual_sst`
 
 ds = NCDataset(fname_subset)
 sst = ds["sst"][:,:,:];
