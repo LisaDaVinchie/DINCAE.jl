@@ -41,7 +41,7 @@ julia -e 'using CUDA; CUDA.versioninfo()'
 source dincae_venv/bin/activate
 
 # Run Julia script with fallback notification
-if julia --project=. examples/DINCAE_tutorial.jl; then
+if julia --project=. examples/DINCAE_tutorial1.jl; then
     notify_telegram "✅ SUCCESS"
     trap - EXIT  # disable failure trap
     echo "🎉 Training completed successfully."
