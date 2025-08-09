@@ -89,7 +89,7 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
-epochs = 10
+epochs = 1000
 batch_size = 32
 enc_nfilter_internal = [16, 30, 58, 110, 209]
 clip_grad = 5.0
