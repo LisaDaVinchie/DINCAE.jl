@@ -18,7 +18,7 @@ localdir = expanduser("./data/")
 # create directory
 mkpath(localdir)
 # filename of the subset
-fname_subset = joinpath(localdir,"dataset_2.nc")
+fname_subset = joinpath(localdir,"dataset.nc")
 # filename of the clean data
 fname = joinpath(localdir,"modis_cleanup.nc")
 # filename of the data with added clouds for cross-validation
