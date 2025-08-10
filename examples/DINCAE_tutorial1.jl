@@ -130,7 +130,6 @@ loss = DINCAE.reconstruct(
     ntime_win = ntime_win,
     modeldir = modeldir
 )
-@info "Elapsed time is: $(time() - start)\n"
 
 open(joinpath(outdir, "loss.txt"), "w") do io
     for l in loss
@@ -139,9 +138,8 @@ open(joinpath(outdir, "loss.txt"), "w") do io
 end
 println("Loss values saved to $(joinpath(outdir, "loss.txt"))")
 
-# # Post process results
-#
-# Compute the RMS (Root Mean Squared error) with the independent validation data
+t = Dates.Time(Dates.Millisecond(round(elapsed_seconds * 1000)))
+@info "Elapsed time is: $(Dates.format(t, "HH:MM:SS"))"
 
 case = (
     fname_orig = fname,
