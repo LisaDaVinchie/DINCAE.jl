@@ -3,7 +3,6 @@ using DINCAE
 using DINCAE_utils
 using Dates
 using NCDatasets
-using PyPlot
 
 # longitude range (east, west)
 lon_range = [-7, -0.8]
@@ -112,11 +111,10 @@ data_test = data;
 fnames_rec = [joinpath(outdir,"data-avg.nc")]
 data_all = [data,data_test]
 
-# Use these parameters for a quick test:
 
-# epochs = 10
-# save_epochs = epochs:epochs
 
+modeldir = joinpath(outdir, "Weights")
+mkpath(modeldir)
 # Start the training and reconstruction of the neural network.
 
 loss = DINCAE.reconstruct(
@@ -129,6 +127,7 @@ loss = DINCAE.reconstruct(
     upsampling_method = upsampling_method,
     loss_weights_refine = loss_weights_refine,
     ntime_win = ntime_win,
+    modeldir = modeldir
 )
 
 open(joinpath(outdir, "loss.txt"), "w") do io
