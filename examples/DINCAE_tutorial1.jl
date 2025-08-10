@@ -117,6 +117,7 @@ modeldir = joinpath(outdir, "Weights")
 mkpath(modeldir)
 # Start the training and reconstruction of the neural network.
 
+start = time()
 loss = DINCAE.reconstruct(
     Atype,data_all,fnames_rec;
     epochs = epochs,
@@ -129,6 +130,7 @@ loss = DINCAE.reconstruct(
     ntime_win = ntime_win,
     modeldir = modeldir
 )
+@info "Elapsed time is: $(time() - start)\n"
 
 open(joinpath(outdir, "loss.txt"), "w") do io
     for l in loss
