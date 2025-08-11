@@ -44,6 +44,7 @@ qual = ds["qual_sst"][:,:,:];
 sst_t = copy(sst)
 sst_t[(qual .> 3) .& .!ismissing.(qual)] .= missing
 sst_t[(sst_t .> 40) .& .!ismissing.(sst_t)] .= missing
+sst_t[(sst_t .< 0) .& .!ismissing.(sst_t)] .= missing # Added by me
 
 @info "number of missing observations: $(count(ismissing,sst_t))"
 @info "number of valid observations: $(count(.!ismissing,sst_t))"
