@@ -138,6 +138,7 @@ open(joinpath(outdir, "loss.txt"), "w") do io
 end
 println("Loss values saved to $(joinpath(outdir, "loss.txt"))")
 
+elapsed_seconds = time() - start
 t = Dates.Time(Dates.Millisecond(round(elapsed_seconds * 1000)))
 @info "Elapsed time is: $(Dates.format(t, "HH:MM:SS"))"
 
