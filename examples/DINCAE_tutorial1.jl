@@ -91,9 +91,10 @@ end
 
 epochs = 1000
 batch_size = 32
+initial_lr = 0.00058
 enc_nfilter_internal = [16, 30, 58, 110, 209]
 clip_grad = 5.0
-regularization_L2_beta = 0
+regularization_L2_beta = 0.0001
 ntime_win = 3
 upsampling_method = :nearest
 loss_weights_refine = (0.3,0.7)
@@ -129,6 +130,7 @@ loss = DINCAE.reconstruct(
     upsampling_method = upsampling_method,
     loss_weights_refine = loss_weights_refine,
     ntime_win = ntime_win,
+    learning_rate = initial_lr,
     modeldir = modeldir
 )
 
