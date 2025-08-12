@@ -140,8 +140,7 @@ end
 println("Loss values saved to $(joinpath(outdir, "loss.txt"))")
 
 elapsed_seconds = time() - start
-t = Dates.Time(Dates.Millisecond(round(elapsed_seconds * 1000)))
-@info "Elapsed time is: $(Dates.format(t, "HH:MM:SS"))"
+@info "Elapsed time is: $(elapsed_seconds) seconds"
 
 case = (
     fname_orig = fname,
