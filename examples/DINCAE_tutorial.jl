@@ -71,7 +71,7 @@ varname = "sst"
 
 # Results of DINCAE will be placed in a sub-directory under `localdir`
 
-outdir = joinpath(localdir,"Results")
+outdir = joinpath(localdir,"./data/")
 mkpath(outdir)
 
 # The variable `url` is the OPeNDAP data URL of the MODIS data. Note the final
@@ -81,9 +81,9 @@ mkpath(outdir)
 
 #  `Error { code = 500; message = "Java heap space"; }`
 
-# if !isfile(fname_subset)
-#     download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
-# end
+if !isfile(fname_subset)
+    download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
+end
 
 # if filesize(fname_subset) < 1_000_000
 #     error("Downloaded file seems too small — possibly corrupted or incomplete.")
