@@ -39,7 +39,6 @@ using DINCAE
 using DINCAE_utils
 using Dates
 using NCDatasets
-using data_processing
 
 # ## Data download
 #
@@ -49,16 +48,17 @@ using data_processing
 # applications one should use a much longer time-range (like 10, 20 years or more)
 
 # longitude range (east, west)
-lon_range = [-7, 37]
+lon_range = [-7, -0.8]
 # latitude range (south, north)
-lat_range = [30, 46]
+lat_range = [33.8, 38.2]
 # time range (start, end)
-time_range = [DateTime(1993,1,1), DateTime(2019,5,13)]
+time_range = [DateTime(2000,2,25), DateTime(2020,12,31)]
+#time_range = [DateTime(2000,2,25), DateTime(2000,3,31)]
 #time_range = [DateTime(2001,1,1), DateTime(2001,12,31)]
 
 
 # local directory
-localdir = expanduser("./data")
+localdir = expanduser("./data/")
 # create directory
 mkpath(localdir)
 # filename of the subset
@@ -71,7 +71,7 @@ varname = "sst"
 
 # Results of DINCAE will be placed in a sub-directory under `localdir`
 
-outdir = joinpath(localdir,"./data/")
+outdir = joinpath(localdir,"Results")
 mkpath(outdir)
 
 # The variable `url` is the OPeNDAP data URL of the MODIS data. Note the final
@@ -85,28 +85,9 @@ if !isfile(fname_subset)
     download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
 end
 
-# if filesize(fname_subset) < 1_000_000
-#     error("Downloaded file seems too small — possibly corrupted or incomplete.")
-# end
-
-# try
-#     ds = NCDataset(fname_subset)
-#     close(ds)
-# catch e
-#     error("Failed to open NetCDF file: $e")
-# end
-
-
+# ```julia
 # url = "https://thredds.jpl.nasa.gov/thredds/dodsC/ncml_aggregation/OceanTemperature/modis/terra/11um/4km/aggregate__MODIS_TERRA_L3_SST_THERMAL_DAILY_4KM_DAYTIME_V2019.0.ncml#fillmismatch"
 # ds = NCDataset(url)
-
-# HPC-optimized processing
-zip_directory = "./zip/"
-fname_subset = create_subset_from_zips(
-    zip_directory, localdir, lon_range, lat_range, time_range;
-    max_memory_gb=8,  # Use more memory if available
-    use_scratch=true    # Use scratch space for temp files
-)
 # # find indices withing the longitude, latitude and time range
 # i = findall(lon_range[1] .<= ds["lon"][:] .<= lon_range[end]);
 # j = findall(lat_range[1] .<= ds["lat"][:] .<= lat_range[end]);
@@ -118,10 +99,11 @@ fname_subset = create_subset_from_zips(
 #    "time" => n))
 # close(ds)
 # @info "NetCDF subset ($(length(n)) slices) written $fname_subset"
+# ```
 
-# # ## Data preparation
-# #
-# # Load the NetCDF variable `sst` and `qual_sst`
+# ## Data preparation
+#
+# Load the NetCDF variable `sst` and `qual_sst`
 
 ds = NCDataset(fname_subset)
 sst = ds["sst"][:,:,:];
@@ -178,25 +160,15 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
-epochs = 10
+epochs = 1000
 batch_size = 32
-enc_nfilter_internal = [16, 30, 58, 110, 209]
+enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
 clip_grad = 5.0
 regularization_L2_beta = 0
 ntime_win = 3
 upsampling_method = :nearest
 loss_weights_refine = (0.3,0.7)
 save_epochs = 200:10:epochs
-
-# Sample
-# epochs = 10
-# enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
-# clip_grad = 5.0
-# regularization_L2_beta = 0
-# ntime_win = 3
-# upsampling_method = :nearest
-# loss_weights_refine = (0.3,0.7)
-# save_epochs = epochs:epochs
 
 
 data = [
@@ -239,16 +211,7 @@ open(joinpath(outdir, "loss.txt"), "w") do io
         println(io, l)
     end
 end
-
-
-# Plot the loss function
-
-# plot(loss)
-# ylim(extrema(loss[2:end]))
-# xlabel("epochs")
-# ylabel("loss");
-# # Save the loss function to a file
-# savefig(joinpath(outdir, "loss.png"))
+println("Loss values saved to $(joinpath(outdir, "loss.txt"))")
 
 # # Post process results
 #
@@ -263,19 +226,9 @@ fnameavg = joinpath(outdir,"data-avg.nc")
 cvrms = DINCAE_utils.cvrms(case,fnameavg)
 @info "Cross-validation RMS error is: $cvrms"
 
-# Next we plot all time instances. The figures will be placed in the
-# directory `figdir`
-
-# figdir = joinpath(outdir,"Fig")
-# DINCAE_utils.plotres(case,fnameavg, clim = nothing, figdir = figdir,
-#                      clim_quantile = (0.01,0.99),
-#                      which_plot = :cv)
-# @info "Figures are in $(figdir)"
-
 
 # Example reconstruction for 2001-09-12
 # ![reconstruction for the 2001-09-12](Fig/data-avg_2001-09-12.png)
 # Panel (a) is the original data where we have added clouds (panel (b)). The
 # reconstuction based on the data in panel (b) is shown in panel (c) together
 # with its expected standard deviation error (panel (d)).
-
