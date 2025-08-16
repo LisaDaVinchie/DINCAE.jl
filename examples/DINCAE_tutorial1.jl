@@ -17,7 +17,7 @@ localdir = expanduser("./data/")
 # create directory
 mkpath(localdir)
 # filename of the subset
-fname_subset = joinpath(localdir,"dataset.nc")
+fname_subset = joinpath(localdir,"modis_subset.nc")
 # filename of the clean data
 fname = joinpath(localdir,"modis_cleanup.nc")
 # filename of the data with added clouds for cross-validation
@@ -29,6 +29,10 @@ varname = "sst"
 outdir = joinpath(localdir,"Results")
 mkpath(outdir)
 
+
+if !isfile(fname_subset)
+    download("https://dox.ulg.ac.be/index.php/s/ckHBdhDzAKERwPb/download",fname_subset)
+end
 
 
 # Load the NetCDF variable `sst` and `qual_sst`
@@ -42,7 +46,7 @@ qual = ds["qual_sst"][:,:,:];
 # higher than 40°C.
 
 sst_t = copy(sst)
-sst_t[(qual .> 3) .& .!ismissing.(qual)] .= missing
+# sst_t[(qual .> 3) .& .!ismissing.(qual)] .= missing
 sst_t[(sst_t .> 40) .& .!ismissing.(sst_t)] .= missing
 sst_t[(sst_t .<= 0) .& .!ismissing.(sst_t)] .= missing # Added by me
 
