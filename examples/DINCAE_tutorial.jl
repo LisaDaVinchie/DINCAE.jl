@@ -160,11 +160,22 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
+# epochs = 1000
+# batch_size = 32
+# enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
+# clip_grad = 5.0
+# regularization_L2_beta = 0
+# ntime_win = 3
+# upsampling_method = :nearest
+# loss_weights_refine = (0.3,0.7)
+# save_epochs = 200:10:epochs
+
 epochs = 1000
 batch_size = 32
-enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
+initial_lr = 0.00058
+enc_nfilter_internal = [16, 30, 58, 110, 209]
 clip_grad = 5.0
-regularization_L2_beta = 0
+regularization_L2_beta = 0.0001
 ntime_win = 3
 upsampling_method = :nearest
 loss_weights_refine = (0.3,0.7)
