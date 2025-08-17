@@ -204,6 +204,7 @@ data_all = [data,data_test]
 modeldir = joinpath(outdir, "Weights")
 mkpath(modeldir)
 
+start = time()
 loss = DINCAE.reconstruct(
     Atype,data_all,fnames_rec;
     epochs = epochs,
@@ -216,6 +217,8 @@ loss = DINCAE.reconstruct(
     ntime_win = ntime_win,
     modeldir = modeldir
 )
+elapsed_seconds = time() - start
+@info "Elapsed time is: $(elapsed_seconds) seconds"
 
 open(joinpath(outdir, "loss.txt"), "w") do io
     for l in loss
