@@ -12,8 +12,6 @@ source bot_codes.txt
 bot_id=${bot_id}
 chat_id=${chat_id}
 
-# export JULIA_LOAD_LIBCPP=false
-# export LD_PRELOAD=/usr/lib64/libstdc++.so.6  # Replace if needed
 
 set -euo pipefail
 
@@ -36,9 +34,7 @@ mkdir -p logs
 export PATH="$HOME/julia-1.11.6/bin:$PATH" # Ensure Julia is in PATH
 
 echo "🔧 Using Julia at: $(which julia)"
-julia -e 'using CUDA; CUDA.versioninfo()'
 
-source dincae_venv/bin/activate
 
 # Run Julia script with fallback notification
 if julia --project=. examples/DINCAE_tutorial1.jl; then
