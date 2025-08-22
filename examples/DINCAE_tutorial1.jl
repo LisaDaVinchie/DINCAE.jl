@@ -102,16 +102,14 @@ loss_weights_refine = (0.3,0.7)
 save_epochs = 200:10:epochs
 
 # Paper Params
-# initial_lr = 0.00058
-# enc_nfilter_internal = [16, 30, 58, 110, 209]
-# regularization_L2_beta = 0.0001
+initial_lr = 0.00058
+enc_nfilter_internal = [16, 30, 58, 110, 209]
+regularization_L2_beta = 0.0001
 
 # GitHub Params
-enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
-regularization_L2_beta = 0
-initial_lr = 0.001 #default
-
-
+# enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
+# regularization_L2_beta = 0
+# initial_lr = 0.001 #default
 
 
 data = [
