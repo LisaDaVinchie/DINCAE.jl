@@ -160,32 +160,15 @@ end
 # Setting the parameters of neural network.
 # See the documentation of `DINCAE.reconstruct` for more information.
 
-# epochs = 1000
-# batch_size = 32
-# enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
-# clip_grad = 5.0
-# regularization_L2_beta = 0
-# ntime_win = 3
-# upsampling_method = :nearest
-# loss_weights_refine = (0.3,0.7)
-# save_epochs = 200:10:epochs
-
 epochs = 1000
 batch_size = 32
+enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
 clip_grad = 5.0
+regularization_L2_beta = 0
 ntime_win = 3
 upsampling_method = :nearest
 loss_weights_refine = (0.3,0.7)
 save_epochs = 200:10:epochs
-
-# GitHub Params
-# enc_nfilter_internal = round.(Int,32 * 2 .^ (0:4))
-# regularization_L2_beta = 0
-
-# Paper Params
-initial_lr = 0.00058
-enc_nfilter_internal = [16, 30, 58, 110, 209]
-regularization_L2_beta = 0.0001
 
 
 data = [
@@ -207,10 +190,8 @@ data_all = [data,data_test]
 
 # Start the training and reconstruction of the neural network.
 
-modeldir = joinpath(outdir, "Weights")
-mkpath(modeldir)
-
 start = time()
+
 loss = DINCAE.reconstruct(
     Atype,data_all,fnames_rec;
     epochs = epochs,
@@ -221,8 +202,8 @@ loss = DINCAE.reconstruct(
     upsampling_method = upsampling_method,
     loss_weights_refine = loss_weights_refine,
     ntime_win = ntime_win,
-    modeldir = modeldir
 )
+
 elapsed_seconds = time() - start
 @info "Elapsed time is: $(elapsed_seconds) seconds"
 
@@ -232,6 +213,13 @@ open(joinpath(outdir, "loss.txt"), "w") do io
     end
 end
 println("Loss values saved to $(joinpath(outdir, "loss.txt"))")
+
+# Plot the loss function
+
+# plot(loss)
+# ylim(extrema(loss[2:end]))
+# xlabel("epochs")
+# ylabel("loss");
 
 # # Post process results
 #
@@ -245,6 +233,15 @@ case = (
 fnameavg = joinpath(outdir,"data-avg.nc")
 cvrms = DINCAE_utils.cvrms(case,fnameavg)
 @info "Cross-validation RMS error is: $cvrms"
+
+# Next we plot all time instances. The figures will be placed in the
+# directory `figdir`
+
+# figdir = joinpath(outdir,"Fig")
+# DINCAE_utils.plotres(case,fnameavg, clim = nothing, figdir = figdir,
+#                      clim_quantile = (0.01,0.99),
+#                      which_plot = :cv)
+# @info "Figures are in $(figdir)"
 
 
 # Example reconstruction for 2001-09-12
