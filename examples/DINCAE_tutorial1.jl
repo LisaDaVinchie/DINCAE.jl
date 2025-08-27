@@ -62,7 +62,7 @@ localdir = expanduser("./data/")
 # create directory
 mkpath(localdir)
 # filename of the subset
-fname_subset = joinpath(localdir,"modis_subset.nc")
+fname_subset = joinpath(localdir,"dataset.nc")
 # filename of the clean data
 fname = joinpath(localdir,"modis_cleanup.nc")
 # filename of the data with added clouds for cross-validation
@@ -118,8 +118,18 @@ sst_t[(qual .> 3) .& .!ismissing.(qual)] .= missing
 sst_t[(sst_t .> 40) .& .!ismissing.(sst_t)] .= missing
 sst_t[(sst_t .<= 0) .& .!ismissing.(sst_t)] .= missing # Added by me
 
-@info "number of missing observations: $(count(ismissing,sst_t))"
-@info "number of valid observations: $(count(.!ismissing,sst_t))"
+# Sort the subset by time
+# time_var = ds["time"]
+# time = NCDatasets.decode(time_var)
+time = ds["time"][:]
+sorted_indices = sortperm(time)
+@info "First index: $(sorted_indices[1])"
+@info "Last index: $(sorted_indices[end])"
+
+sst_t = sst_t[:,:,sorted_indices]
+qual = qual[:,:,sorted_indices]
+
+@info "Dataset sorted, first/last dates: $(time[sortperm(time)][1]), $(time[sortperm(time)][end])"
 
 # Clean-up the data to write them to disk.
 
