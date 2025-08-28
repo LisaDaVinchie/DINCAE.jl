@@ -121,13 +121,13 @@ sst_t[(sst_t .<= 0) .& .!ismissing.(sst_t)] .= missing # Added by me
 # Sort the subset by time
 # time_var = ds["time"]
 # time = NCDatasets.decode(time_var)
-time = ds["time"][:]
-sorted_indices = sortperm(time)
+time_vals = ds["time"][:]
+sorted_indices = sortperm(time_vals)
 @info "First index: $(sorted_indices[1])"
 @info "Last index: $(sorted_indices[end])"
 
 sst_t = sst_t[:,:,sorted_indices]
-qual = qual[:,:,sorted_indices]
+# qual = qual[:,:,sorted_indices]
 
 @info "Dataset sorted, first/last dates: $(time[sortperm(time)][1]), $(time[sortperm(time)][end])"
 
