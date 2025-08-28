@@ -129,7 +129,7 @@ sorted_indices = sortperm(time_vals)
 sst_t = sst_t[:,:,sorted_indices]
 # qual = qual[:,:,sorted_indices]
 
-@info "Dataset sorted, first/last dates: $(time[sortperm(time)][1]), $(time[sortperm(time)][end])"
+@info "Dataset sorted, first/last dates: $(time_vals[sortperm(time_vals)][1]), $(time_vals[sortperm(time_vals)][end])"
 
 # Clean-up the data to write them to disk.
 
